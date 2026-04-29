@@ -80,6 +80,56 @@
   border-radius: 8px;
   padding: 6px 8px;
 }
+.a {
+  width: 140px;        /* ← 固定 */
+  min-width: 140px;
+  max-width: 140px;
+
+  height: 34px;
+
+  background: #444;
+  color: #444;
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 0.8em;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 0;      /* ← これ超重要 */
+}
+.controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: none !important;
+
+  background: #1976d2 !important;
+  color: #fff !important;
+
+  font-weight: bold;
+  font-size: 0.9em;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  cursor: pointer;
+}
+
+.btn:nth-child(2) {
+  background: #43a047 !important; /* シャッフル */
+}
+
+.btn:nth-child(3) {
+  background: #757575 !important; /* 標準順 */
+}
 </style>
 </head>
 
