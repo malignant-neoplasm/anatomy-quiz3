@@ -5,90 +5,69 @@
 <title>Anatomy Quiz</title>
 
 <style>
-body {
-  font-family: sans-serif;
-  margin: 20px;
-  background: #fafafa;
-}
-
+/* ===== 全体 ===== */
 #quiz {
-  max-width: 90%;
+  max-width: 600px;
   margin: 0 auto;
 }
 
-.controls {
-  margin-bottom: 15px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background:#1565c0;
-  color:white;
-  font-weight: bold;
-}
-
-/* ===== 2列レイアウト（安定） ===== */
+/* ===== リスト（1列固定） ===== */
 .list {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 12px;
+  padding: 0;
+  list-style: none;
 }
 
 /* ===== カード ===== */
 .item {
-  height: 56px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 8px 12px;
-
   display: flex;
   align-items: center;
-  gap: 10px; /* ← 間隔 */
-  box-sizing: border-box;
+  gap: 10px;
 
-  cursor: pointer;
+  padding: 14px;
+  border-radius: 14px;
+  background: #fff;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
 }
 
-.item.marked {
-  border: 2px solid #ff5252;
-  background: #fff5f5;
-}
-
-/* 問題 */
+/* ===== 問題 ===== */
 .q {
   flex: 1;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 0.95em;
 }
 
-/* ===== 黒枠（絶対崩さない） ===== */
+/* ===== 答え ===== */
 .a {
-  width: 200px;
-  min-width: 200px;
+  min-width: 110px;
+  max-width: 40%;
   height: 32px;
 
   background: #444;
   color: #444;
-  border-radius: 6px;
+  border-radius: 8px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  font-size: 0.85em;
 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+/* 表示 */
+.a.show {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+/* PCホバー */
 .a:hover {
   background: #e3f2fd;
   color: #1565c0;
@@ -96,31 +75,10 @@ body {
 
 /* 音声ボタン */
 .speak-btn {
-  background: #eee;
+  background: #eef2f7;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  padding: 4px 6px;
-  flex-shrink: 0;
-}
-
-/* ===== スマホ対応 ===== */
-@media (max-width: 650px) {
-
-  .list {
-    grid-template-columns: 1fr; /* 1列 */
-  }
-
-  .item {
-    height: auto;
-    padding: 10px;
-  }
-
-  .a {
-    width: 140px;
-    min-width: 140px;
-    font-size: 0.8em;
-  }
+  border-radius: 8px;
+  padding: 6px 8px;
 }
 </style>
 </head>
