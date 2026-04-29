@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Anatomy Quiz</title>
+
+<style>
+body { font-family: sans-serif; margin: 20px; background:#fafafa; }
+#quiz { max-width: 900px; margin: 0 auto; }
+
+.controls {
+  margin-bottom: 15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background:#1565c0;
+  color:white;
+  font-weight: bold;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.item {
+  width: calc(50% - 12px);
+  height: 56px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.item.marked {
+  border: 2px solid #ff5252;
+  background: #fff5f5;
+}
+
+.q { font-weight: bold; }
+
+.a {
+  width: 200px;
+  height: 32px;
+  background: #444;
+  color: #444;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.a:hover {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.speak-btn {
+  background: #eee;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 4px 6px;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 650px) {
+  .item { width: 100%; }
+}
+</style>
+</head>
+
+<body>
+
+<div id="quiz">
+  <div class="controls">
+    <button class="btn" onclick="toggleMode()">🔁 英→日</button>
+    <button class="btn" onclick="render(true)">🔀 シャッフル</button>
+    <button class="btn" onclick="render(false)" style="background:#666;">標準順</button>
+  </div>
+
+  <ul id="list" class="list"></ul>
+</div>
+
+<script>
+
+let isEnglishMode = true;
+
+const words = [
+{en:"brain / encephalon", jp:"脳"},
+{en:"cerebrum", jp:"大脳"},
+{en:"cerebellum", jp:"小脳"},
+{en:"brainstem", jp:"脳幹"},
+{en:"midbrain / mesencephalon", jp:"中脳"},
+{en:"pons", jp:"橋"},
+{en:"medulla oblongata", jp:"延髄"},
+{en:"diencephalon", jp:"間脳"},
+{en:"thalamus", jp:"視床"},
+{en:"hypothalamus", jp:"視床下部"},
+{en:"pineal gland", jp:"松果体"},
+{en:"pituitary gland", jp:"下垂体"},
+{en:"hippocampus", jp:"海馬"},
+{en:"spinal cord", jp:"脊髄"},
+{en:"meninx (meninges)", jp:"髄膜"},
+{en:"dura mater", jp:"硬膜"},
+{en:"arachnoid mater", jp:"クモ膜"},
+{en:"pia mater", jp:"軟膜"},
+{en:"cerebrospinal fluid (CSF)", jp:"脳脊髄液"},
+{en:"eyeball", jp:"眼球"},
+{en:"conjunctiva", jp:"結膜"},
+{en:"cornea", jp:"角膜"},
+{en:"uvea", jp:"ぶどう膜"},
+{en:"iris", jp:"虹彩"},
+{en:"ciliary body", jp:"毛様体"},
+{en:"choroid", jp:"脈絡膜"},
+{en:"pupil", jp:"瞳孔"},
+{en:"crystalline lens", jp:"水晶体"},
+{en:"retina", jp:"網膜"},
+{en:"vitreous body", jp:"硝子体"},
+{en:"sclera", jp:"強膜"},
+{en:"external ear", jp:"外耳"},
+{en:"auricle", jp:"耳介"},
+{en:"earlobe / lobule", jp:"耳たぶ"},
+{en:"external auditory canal", jp:"外耳道"},
+{en:"eardrum / tympanic membrane", jp:"鼓膜"},
+{en:"middle ear", jp:"中耳"},
+{en:"Eustachian tube", jp:"耳管"},
+{en:"inner ear", jp:"内耳"},
+{en:"cochlea", jp:"蝸牛"},
+{en:"semicircular canals", jp:"三半規管"},
+{en:"heart", jp:"心臓"},
+{en:"pericardium", jp:"心膜"},
+{en:"epicardium", jp:"心外膜"},
+{en:"myocardium", jp:"心筋層"},
+{en:"endocardium", jp:"心内膜"},
+{en:"left atrium", jp:"左心房"},
+{en:"left ventricle", jp:"左心室"},
+{en:"right atrium", jp:"右心房"},
+{en:"right ventricle", jp:"右心室"},
+{en:"tricuspid valve", jp:"三尖弁"},
+{en:"mitral valve", jp:"僧帽弁"},
+{en:"aortic valve", jp:"大動脈弁"},
+{en:"pulmonary valve", jp:"肺動脈弁"},
+{en:"aortic arch", jp:"大動脈弓"},
+{en:"interventricular septum", jp:"心室中隔"},
+{en:"aorta", jp:"大動脈"},
+{en:"pulmonary artery", jp:"肺動脈"},
+{en:"pulmonary vein", jp:"肺静脈"},
+{en:"coronary artery", jp:"冠動脈"},
+{en:"superior vena cava", jp:"上大静脈"},
+{en:"inferior vena cava", jp:"下大静脈"},
+{en:"blood vessel", jp:"血管"},
+{en:"vein", jp:"静脈"},
+{en:"artery", jp:"動脈"},
+{en:"capillary", jp:"毛細血管"},
+{en:"lymph", jp:"リンパ"},
+{en:"lymph node", jp:"リンパ節"},
+{en:"bone marrow", jp:"骨髄"},
+{en:"red blood cell / erythrocyte", jp:"赤血球"},
+{en:"white blood cell / leukocyte", jp:"白血球"},
+{en:"neutrophil", jp:"好中球"},
+{en:"basophil", jp:"好塩基球"},
+{en:"eosinophil", jp:"好酸球"},
+{en:"lymphocyte", jp:"リンパ球"},
+{en:"monocyte", jp:"単球"},
+{en:"platelet / thrombocyte", jp:"血小板"},
+{en:"blood plasma", jp:"血漿"},
+{en:"serum", jp:"血清"}
+];
+
+// シャッフル
+function shuffle(arr){
+  for(let i = arr.length-1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// 音声
+function speak(text){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-US";
+  u.rate = 0.85;
+  speechSynthesis.speak(u);
+}
+
+// 切替
+function toggleMode(){
+  isEnglishMode = !isEnglishMode;
+  document.querySelector(".controls .btn").textContent =
+    isEnglishMode ? "🔁 英→日" : "🔁 日→英";
+  render(false);
+}
+
+// 表示
+function render(doShuffle){
+  let list = [...words];
+  if(doShuffle) list = shuffle(list);
+
+  let html = "";
+
+  list.forEach(w=>{
+    const q = isEnglishMode ? w.en : w.jp;
+    const a = isEnglishMode ? w.jp : w.en;
+
+    html += `
+      <li class="item" onclick="this.classList.toggle('marked')">
+        <button class="speak-btn" onclick="event.stopPropagation(); speak('${w.en}')">🔊</button>
+        <span class="q">${q}</span>
+        <span class="a">${a}</span>
+      </li>
+    `;
+  });
+
+  document.getElementById("list").innerHTML = html;
+}
+
+render(false);
+
+</script>
+
+</body>
+</html>
