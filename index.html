@@ -5,8 +5,16 @@
 <title>Anatomy Quiz</title>
 
 <style>
-body { font-family: sans-serif; margin: 20px; background:#fafafa; }
-#quiz { max-width: 900px; margin: 0 auto; }
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  background: #fafafa;
+}
+
+#quiz {
+  max-width: 900px;
+  margin: 0 auto;
+}
 
 .controls {
   margin-bottom: 15px;
@@ -25,24 +33,28 @@ body { font-family: sans-serif; margin: 20px; background:#fafafa; }
   font-weight: bold;
 }
 
+/* ===== 2列レイアウト（安定） ===== */
 .list {
   list-style: none;
   padding: 0;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 
+/* ===== カード ===== */
 .item {
-  width: calc(50% - 12px);
   height: 56px;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 8px 12px;
+
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px; /* ← 間隔 */
+  box-sizing: border-box;
+
   cursor: pointer;
 }
 
@@ -51,17 +63,27 @@ body { font-family: sans-serif; margin: 20px; background:#fafafa; }
   background: #fff5f5;
 }
 
-.q { font-weight: bold; }
+/* 問題 */
+.q {
+  flex: 1;
+  font-weight: bold;
+  font-size: 0.95em;
+}
 
+/* ===== 黒枠（絶対崩さない） ===== */
 .a {
   width: 200px;
+  min-width: 200px;
   height: 32px;
+
   background: #444;
   color: #444;
   border-radius: 6px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -72,18 +94,33 @@ body { font-family: sans-serif; margin: 20px; background:#fafafa; }
   color: #1565c0;
 }
 
+/* 音声ボタン */
 .speak-btn {
   background: #eee;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   padding: 4px 6px;
-  margin-right: 6px;
   flex-shrink: 0;
 }
 
+/* ===== スマホ対応 ===== */
 @media (max-width: 650px) {
-  .item { width: 100%; }
+
+  .list {
+    grid-template-columns: 1fr; /* 1列 */
+  }
+
+  .item {
+    height: auto;
+    padding: 10px;
+  }
+
+  .a {
+    width: 140px;
+    min-width: 140px;
+    font-size: 0.8em;
+  }
 }
 </style>
 </head>
@@ -213,7 +250,7 @@ function toggleMode(){
   render(false);
 }
 
-// 表示
+// 描画
 function render(doShuffle){
   let list = [...words];
   if(doShuffle) list = shuffle(list);
